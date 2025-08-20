@@ -21,7 +21,7 @@ AI Reactbot is an interactive AI companion that can see your screen, listen to y
 
 ### Prerequisites
 
-- Python 3.x
+- Python 3.12.x
 - eSpeak NG installed (Restart required)
 - MPV.io installed (via Chocolatey on Windows)
 
