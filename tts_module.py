@@ -32,12 +32,11 @@ def eleven_tts(prompt):
     )
     raw_bytes = b"".join(audio_stream)
 
-# Convert bytes to int16
-    if len(raw_bytes) % 2 != 0:  # trim if odd
+    if len(raw_bytes) % 2 != 0: 
         raw_bytes = raw_bytes[:-1]
     audio_array = np.frombuffer(raw_bytes, dtype=np.int16)
 
-# Save as proper WAV
+
     sf.write("output.wav", audio_array, 24000)
 
 def local_tts(prompt):
