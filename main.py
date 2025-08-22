@@ -69,11 +69,25 @@ def append_ollama(user_input, b64_image):
             del entry["images"]
 
 def setup_API(filename="api.json"):
-    print("If you dont have an API key for the service press enter")
+    with open(filename, "r") as f:
+        conf =  json.load(f)
+    print("To keep the API key the same or if you dont have one press enter")
+    openai = input("Enter OpenAI API key")
+    if openai == "":
+        openai = conf["openai"]
+    
+    groq = input("Enter Groq API key")
+    if groq == "":
+        groq = conf["groq"]
+    
+    eleven = input("Enter Elevenlabs API key")
+    if eleven == "":
+        eleven = conf["elevenlabs"]
+
     keys = {
-        "openai": input("Enter OpenAI API Key: "),
-        "elevenlabs": input("Enter ElevenLabs API Key: "),
-        "groq": input("Enter Groq API Key: "),
+        "openai": openai,
+        "elevenlabs": eleven,
+        "groq": groq
     }
 
     with open(filename, "w") as f:
@@ -148,6 +162,7 @@ def load_config(filename="config.json"):
     config.TTS = conf["tts"]
 
 def load_api_keys(filename="api.json"):
+    import keys
     with open(filename, "r") as f:
         api_keys =  json.load(f)
     keys.ELEVENLABS_API_KEY = api_keys["elevenlabs"]
@@ -214,8 +229,16 @@ play_obj = None
 
 if __name__ == "__main__":
     if not os.path.exists("config.json"):
-        setup_API()
+        keys = {
+            "openai": "",
+            "elevenlabs": "",
+            "groq": ""
+        }
+
+        with open("api.json", "w") as f:
+            json.dump(keys, f, indent=2)
         setup_config()
+        setup_API()
     else:  
         choice = input("Edit API Keys? [y/n]: ")
         while choice.lower() != "y" and choice.lower() != "n":
@@ -231,7 +254,6 @@ if __name__ == "__main__":
         if choice == "y":
             setup_config()
     
-    
     load_config()
     load_api_keys()
     print("Please wait while everything loads...")
@@ -242,25 +264,33 @@ if __name__ == "__main__":
         from tts_module import tts
         
         while True:
-            print("Hold clear to record")
+            while True:
+                try:
+                    print("Hold clear to record")
 
-            while not keyboard.is_pressed("clear"):
-                continue
+                    while not keyboard.is_pressed("clear"):
+                        continue
 
-            with sd.InputStream(samplerate=sample_rate, channels=channels, dtype='float32', callback=audio_callback):
-                while keyboard.is_pressed("clear"):
-                    time.sleep(0.1)
+                    with sd.InputStream(samplerate=sample_rate, channels=channels, dtype='float32', callback=audio_callback):
+                        while keyboard.is_pressed("clear"):
+                            time.sleep(0.1)
 
-            audio_data = np.concatenate(all_audio, axis=0)
-            audio_normalized = np.int16(audio_data / np.max(np.abs(audio_data)) * 32767)
+                    audio_data = np.concatenate(all_audio, axis=0)
+                    audio_normalized = np.int16(audio_data / np.max(np.abs(audio_data)) * 32767)
 
-            write(filename, sample_rate, audio_normalized)
-            all_audio.clear()
-            print("✅ Audio saved'")
+                    write(filename, sample_rate, audio_normalized)
+                    all_audio.clear()
+                    print("✅ Audio saved'")
 
+                    userInput = stt(filename)
+                    break
+
+                except Exception as e:
+                    print(f"An error occured while transcribing: {e}")
             b64_image = get_screen()
-            userInput = stt(filename)
             print("✅ Transcribed")
+            print(userInput)
+                
             
             if config.AI == "groq" or config.AI == "openai":
                 append_message(userInput, b64_image)
@@ -280,6 +310,7 @@ if __name__ == "__main__":
             
     except Exception as e:
         print("error:", e)
+        
     finally:
         if os.path.exists(filename):
             os.remove(filename)
