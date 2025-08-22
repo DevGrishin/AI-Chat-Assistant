@@ -22,9 +22,9 @@ AI Reactbot is an interactive AI companion that can see your screen, listen to y
 ### Prerequisites
 
 - Python 3.12.x
-- eSpeak NG installed (Restart required)
-- MPV.io installed (via Chocolatey on Windows)
-- Microsoft C++ Build Tools (Select desktop development with c++)
+- [eSpeak NG](https://github.com/espeak-ng/espeak-ng/releases) installed (Restart required)
+- [MPV.io](https://chocolatey.org/packages/mpvio) installed (via Chocolatey on Windows)
+- [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) (Select desktop development with c++)
 
 ### Required Python Packages
 
