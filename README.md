@@ -29,7 +29,7 @@ AI Reactbot is an interactive AI companion that can see your screen, listen to y
 ### Required Python Packages
 
 ```bash
-pip install ollama openai groq elevenlabs whisper sounddevice simpleaudio scipy numpy mss kokoro soundfile keyboard
+pip install ollama openai groq elevenlabs openai-whisper sounddevice simpleaudio scipy numpy mss kokoro soundfile keyboard
 ```
 
 ### Installation
