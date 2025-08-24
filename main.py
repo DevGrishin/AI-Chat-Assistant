@@ -72,15 +72,15 @@ def setup_API(filename="api.json"):
     with open(filename, "r") as f:
         conf =  json.load(f)
     print("To keep the API key the same or if you dont have one press enter")
-    openai = input("Enter OpenAI API key")
+    openai = input("Enter OpenAI API key: ")
     if openai == "":
         openai = conf["openai"]
     
-    groq = input("Enter Groq API key")
+    groq = input("Enter Groq API key: ")
     if groq == "":
         groq = conf["groq"]
     
-    eleven = input("Enter Elevenlabs API key")
+    eleven = input("Enter Elevenlabs API key: ")
     if eleven == "":
         eleven = conf["elevenlabs"]
 
